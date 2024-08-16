@@ -8,6 +8,32 @@ class Request {
   public static function base(){
     return  trim(dirname($_SERVER['SCRIPT_NAME']).'/');
   }
+
+
+  //uri
+
+  public static function uri(){
+
+    //CHECK IF SSL 
+
+    if (!self::secure()){
+      $t = trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/');
+
+      //GET BASE PATH
+      $b = self::base();
+
+      //Check if base if in URI
+
+      if (strpos($t, $b) === 0){
+        $t = substr($t, strlen($b));
+      }
+
+      return $t ?: '/';
+
+    }
+    
+
+  }
   
   //SSL
 
@@ -25,7 +51,7 @@ class Request {
   // IS GET 
 
   public static function isGet(){
-    return self:method() == 'GET';
+    return self::method() == 'GET';
   }
   
   // IS Ajax
